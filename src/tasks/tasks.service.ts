@@ -1,58 +1,74 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { TaskStatus } from './task-status-enum';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from './tasks.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
-  // // It is good practice to declare variables or constants with a private prop
-  // // because it prevents other dependencies outside of this class from mutating it.
-  // private tasks: Task[] = [];
-  // createTask(createTaskDto: CreateTaskDto): Task {
-  //   const { title, description } = createTaskDto;
-  //   const task: Task = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: TaskStatus.OPEN
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
-  // getAllTasks(): Task[] {
-  //   return this.tasks;
-  // }
-  // getTasksWithFilter(filterDto: GetTasksFilterDto): Task[] {
-  //   const { status, search } = filterDto;
-  //   let tasks = this.getAllTasks();
-  //   if (status) {
-  //     tasks = tasks.filter((task) => task.status === status);
-  //   }
-  //   if (search) {
-  //     tasks = tasks.filter((task) => {
-  //       const _search =
-  //         task.title.includes(search) || task.description.includes(search);
-  //       return _search;
-  //     });
-  //   }
-  //   return tasks;
-  // }
-  // getTaskById(id: string): Task {
-  //   const task = this.tasks.find((task) => task.id === id);
-  //   if (!task) {
-  //     throw new NotFoundException(`Task with ID ${id} not found`);
-  //   }
-  //   return task;
-  // }
-  // updateStatusTask(id: string, status: TaskStatus): Task {
-  //   const task = this.getTaskById(id);
-  //   task.status = status;
-  //   return task;
-  // }
-  // deleteTaskById(id: string): string {
-  //   const task = this.getTaskById(id);
-  //   const taskIndex = this.tasks.indexOf(task);
-  //   this.tasks.splice(taskIndex, 1);
-  //   return `The task ${id} has been deleted`;
-  // }
+  constructor(
+    @InjectRepository(Task)
+    private tasksRepository: Repository<Task>
+  ) {}
+
+  async getTaskById(id: string): Promise<Task> {
+    const found = await this.tasksRepository.findOne({
+      where: {
+        id
+      }
+    });
+    if (!found) {
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+    return found;
+  }
+
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    const { title, description } = createTaskDto;
+    const task = this.tasksRepository.create({
+      title,
+      description,
+      status: TaskStatus.OPEN
+    });
+
+    await this.tasksRepository.save(task);
+    return task;
+  }
+
+  async getTasks(filter: GetTasksFilterDto): Promise<Task[]> {
+    const { status, search } = filter;
+    const query = this.tasksRepository.createQueryBuilder('task');
+
+    if (status) {
+      query.andWhere('task.status = :status', { status });
+    }
+
+    if (search) {
+      query.andWhere(
+        'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)', // --> LOWER REFER TO LOWERCASE
+        { search: `%${search}%` }
+      );
+    }
+    const tasks = await query.getMany();
+    return tasks;
+  }
+
+  async updateStatusTask(id: string, status: TaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id);
+    task.status = status;
+    await this.tasksRepository.save(task);
+    return task;
+  }
+
+  async deleteTaskById(id: string): Promise<string> {
+    const result = await this.tasksRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with ID ${id} not found`);
+    }
+
+    throw new HttpException(`The task ${id} has been deleted`, 200);
+  }
 }
