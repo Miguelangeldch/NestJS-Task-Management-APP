@@ -22,7 +22,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API DEVELOPED IN NESTJS FOR TASK MANAGEMENT APP
 
 ## Installation
 
