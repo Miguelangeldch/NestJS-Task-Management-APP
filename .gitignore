@@ -1,6 +1,9 @@
 # compiled output
 /dist
 /node_modules
+/task-management-client/node_modules
+/task-management-client/dist-ssr
+/task-management-client/*.local
 
 # Logs
 logs
@@ -37,3 +40,4 @@ lerna-debug.log*
 # ENVIROMENT VARIABLES
 .env.stage.dev
 .env.stage.prod
+/task-management-client/.env
