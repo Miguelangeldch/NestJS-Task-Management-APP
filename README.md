@@ -22,7 +22,7 @@
 
 ## Description
 
-API DEVELOPED IN NESTJS FOR TASK MANAGEMENT APP
+APP para creación de tareas con NestJS y React
 
 ## Installation
 
@@ -32,16 +32,19 @@ $ pnpm install
 
 ## Running the app
 
-```bash
-# development
-$ pnpm run start
+# Server
 
+```bash
 # watch mode
 $ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
 ```
+
+# Client
+```bash
+# dev mode
+$ pnpm run dev
+```
+
 
 ## Support
 
