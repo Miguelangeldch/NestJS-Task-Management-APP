@@ -32,14 +32,14 @@ $ pnpm install
 
 ## Running the app
 
-# Server
+### Server
 
 ```bash
 # watch mode
 $ pnpm run start:dev
 ```
 
-# Client
+### Client
 ```bash
 # dev mode
 $ pnpm run dev
