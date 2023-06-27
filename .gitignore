@@ -1,43 +1,45 @@
 # compiled output
 /dist
 /node_modules
-/task-management-client/node_modules
-/task-management-client/dist-ssr
-/task-management-client/*.local
+server/dist
+server/node_modules
+/client/node_modules
+/client/dist-ssr
+/client/*.local
 
 # Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+/server/logs
+/server/*.log
+/server/npm-debug.log*
+/server/pnpm-debug.log*
+/server/yarn-debug.log*
+/server/yarn-error.log*
+/server/lerna-debug.log*
 
 # OS
-.DS_Store
+/server/.DS_Store
 
 # Tests
-/coverage
-/.nyc_output
+/server/coverage
+/server/.nyc_output
 
 # IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+/server/.idea
+/server/.project
+/server/.classpath
+/server/.c9/
+/server/*.launch
+/server/.settings/
+/server/*.sublime-workspace
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+/server/.vscode/*
+/server/!.vscode/settings.json
+/server/!.vscode/tasks.json
+/server/!.vscode/launch.json
+/server/!.vscode/extensions.json
 
 # ENVIROMENT VARIABLES
-.env.stage.dev
-.env.stage.prod
-/task-management-client/.env
+/server/.env.stage.dev
+/server/.env.stage.prod
+/client/.env
